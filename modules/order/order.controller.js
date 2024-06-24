@@ -6,8 +6,9 @@ import { cartModel } from "../../database/models/cart.model.js"
 import { productModel } from "../../database/models/product.model.js"
 import { couponModel } from "../../database/models/coupon.model.js"
 import { orderModel } from "../../database/models/order.model.js"
-
+import express from 'express'
 import Stripe from 'stripe';
+import { userModel } from "../../database/models/user.model.js"
 const stripe = new Stripe('sk_test_51PUpVz03Ik10aAMUgpoUIviwI9MhEWA7LJXhW6oiKPfv39DM2LWOfC0I9zDvUK62PgMlySESofVkdV8jvZw1LRGY00HIQMBs1m');
 const addCashOrder=errorHandling(async(req,res,next)=>{
    let cart=await cartModel.findById(req.params.id)
@@ -77,10 +78,38 @@ const getSpecificOrder=errorHandling(async(req,res,next)=>{
    })
    res.json({message:"success",session})
  })
+
+const app = express();
+const createOnlineOrder=errorHandling((async (req, res) => {
+  const sig = req.headers['stripe-signature'];
+
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, 'whsec_4LVQvpFeYbJitFpZzjtEctNUeuh4WbKS');
+  } catch (err) {
+   return res.status(400).send(`Webhook Error: ${err.message}`);
+
+  }
+
+  if(event.type=='checkout.session.completed'){
+    const checkoutSessionCompleted = event.data.object;
+    console.log("done")
+  }else{
+    console.log(`Unhandled event type ${event.type}`);
+  }
+
+
+  // Return a 200 res to acknowledge receipt of the event
+  res.json({message:"done"});
+}));
+
 export{
     
     addCashOrder,
     getSpecificOrder,
     getAllOrder,
-    createCheckOutSession
+    createCheckOutSession,
+    createOnlineOrder
+    
 }
