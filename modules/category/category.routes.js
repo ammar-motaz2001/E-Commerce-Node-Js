@@ -2,7 +2,7 @@
 import express from "express"
 import { addCategory, deleteCategory, getAllCategories, getSingleCategory, updateCategory } from "./category.controller.js"
 import { validation } from "../../middleware/validation.js"
-import { addCategoryVal, paramsIdVal } from "../../middleware/category.validation.js"
+import { addCategoryVal, paramsIdVal, updateCategoryVal } from "../../middleware/category.validation.js"
 import { uploadSingleFile } from "../../middleware/upload.js"
 import subcategoryRouter from "../subcategory/subcategory.routes.js"
 import { allowUsers, protectedRoutes } from "../auth/auth.controller.js"
@@ -15,6 +15,6 @@ categoryRouter
 .get(getAllCategories)
 categoryRouter.route('/categories/:id')
 .get(validation(paramsIdVal),getSingleCategory)
-.put(protectedRoutes,allowUsers("admin"),validation(updateCategory),updateCategory)
+.put(protectedRoutes,allowUsers("admin"),validation(updateCategoryVal),updateCategory)
 .delete(protectedRoutes,allowUsers("admin"),validation(paramsIdVal),deleteCategory)
 export default categoryRouter

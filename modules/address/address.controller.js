@@ -19,7 +19,7 @@ const updateAddress=errorHandling(async(req,res,next)=>{
 const getLoggedUserAddresses=errorHandling(async(req,res,next)=>{
     let address=await userModel.findById(req.user._id)
     !address && res.status(404).json({message:"address Not Found "})
-     address  && res.json({message:" Address updated",address:address.addresses})
+     address  && res.json({message:" success",address:address.addresses})
 })
 export{
     addAddress,

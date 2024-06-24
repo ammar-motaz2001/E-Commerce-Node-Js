@@ -13,14 +13,12 @@ export const validation=(schema)=>{
         else{
             filter={...req.body,...req.params,...req.query}
         }
-        const {error}=schema.validate(filter,{abortEarly:false})
+        const {error}=schema.validate(filter)
         console.log(error)
-        if(!error){
-            next()
-        }else{
+        if(error){
             next(new AppError(error,401))
-
         }
+        next()
     }
     
 }

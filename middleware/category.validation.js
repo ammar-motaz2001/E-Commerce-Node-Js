@@ -19,14 +19,15 @@ const paramsIdVal=Joi.object({
     id:Joi.string().hex().length(24).required()
 })
 
-const updateCategory=Joi.object({
+const updateCategoryVal=Joi.object({
+    id:Joi.string().hex().length(24).required(),
     name:Joi.string().min(2).max(100).required().trim(),
-    id:Joi.string().hex().length(24).required()
+    
 
 })
 
 export{
     addCategoryVal,
     paramsIdVal,
-    updateCategory
+    updateCategoryVal
 }
